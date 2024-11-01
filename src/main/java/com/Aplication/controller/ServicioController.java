@@ -22,8 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/service")
-@CrossOrigin(origins = "http://localhost:3000") // Permitir solicitudes desde este origen
-
+@CrossOrigin(origins = {"http://localhost:3000", "https://barberturn.netlify.app"})
 public class ServicioController {
 
 
