@@ -3,17 +3,25 @@ package com.Aplication.Services;
 
 import com.Aplication.modelo.Turno;
 import com.Aplication.repository.TurnoRepository;
+import jakarta.mail.MessagingException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @Service
 public class TurnoService {
 
     @Autowired
     private TurnoRepository turnoRepository;
+    
+    @Autowired
+    private EmailService emailService;
 
     // Crear o actualizar un turno
     public Turno saveOrUpdate(Turno turno) {
@@ -58,5 +66,59 @@ public class TurnoService {
             turno.setHora(updateTurno.getHora());
             return turnoRepository.save(turno);  // Guardar turno actualizado
         }).orElseThrow(() -> new RuntimeException("Turno no encontrado"));
+    }
+    
+    // Tarea programada para enviar el recordatorio 20 minutos antes del turno
+    @Scheduled(fixedRate = 60000)  // Ejecuta cada minuto
+    public void sendTurnoReminder() throws MessagingException {
+        System.out.println("Revisando los turnos...");
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime reminderTime = now.plusMinutes(20); // 20 minutos antes del turno
+
+        // Obtiene la hora actual y la hora del recordatorio
+        LocalTime nowTime = now.toLocalTime();
+        LocalTime reminderTimeStart = reminderTime.toLocalTime();
+
+        // Convierte la hora de LocalTime a String
+        String horaRecordatorio = reminderTimeStart.format(DateTimeFormatter.ofPattern("HH:mm"));
+
+        // Buscar todos los turnos para la fecha actual
+        List<Turno> turnos = turnoRepository.findByFechaAndHoraBetween(now.toLocalDate(), "00:00", "23:59");
+        System.out.println("Turnos encontrados: " + turnos.size());
+
+        // Filtrar los turnos que están dentro del rango de 20 minutos antes de la hora del turno
+        for (Turno turno : turnos) {
+            // Convertimos la hora del turno a LocalTime para compararla
+            LocalTime turnoHora = LocalTime.parse(turno.getHora(), DateTimeFormatter.ofPattern("HH:mm"));
+            System.out.println("Hora del turno: " + turnoHora);
+
+            // Verificamos si la hora del turno está dentro del rango de 20 minutos antes
+            if (turnoHora.isAfter(reminderTimeStart.minusMinutes(1)) && turnoHora.isBefore(reminderTimeStart.plusMinutes(1))) {
+                // Enviar el correo de recordatorio
+                String subject = "Recordatorio de tu reserva en BarberTurn";
+                String htmlContent = "<html lang='es'>"
+                        + "<head><meta charSet='UTF-8'/><meta name='viewport' content='width=device-width, initial-scale=1.0'/><title>Recordatorio de Reserva - BarberTurn</title></head>"
+                        + "<body style='font-family: Helvetica Neue, Arial, sans-serif; margin: 0; padding: 0; background-color: #f6f6f6;'>"
+                        + "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='background-color: #f6f6f6; padding: 20px;'>"
+                        + "<tr><td align='center'><table cellpadding='0' cellspacing='0' border='0' width='600' style='background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);'>"
+                        + "<tr><td style='padding: 40px 0; text-align: center; background-color: #FFD700;'><h1 style='color: #333333; font-size: 28px; margin: 0;'>¡Recordatorio de Reserva!</h1></td></tr>"
+                        + "<tr><td style='padding: 40px 30px;'>"
+                        + "<p style='color: #333333; font-size: 16px; line-height: 1.5; margin-bottom: 20px;'>Hola <strong>" + turno.getCliente() + "</strong>,</p>"
+                        + "<p style='color: #333333; font-size: 16px; line-height: 1.5; margin-bottom: 20px;'>Tu reserva en BarberTurn es a las <strong>" + turno.getHora() + "</strong> con el barbero <strong>" + turno.getBarbero() + "</strong> en la barbería <strong>" + turno.getLocal() + "</strong>.</p>"
+                        + "<p style='color: #333333; font-size: 16px; line-height: 1.5; margin-bottom: 20px;'>Te recomendamos que te acerques a la barbería en los próximos minutos si te encuentras en una larga distancia.</p>"
+                        + "<p style='color: #333333; font-size: 16px; line-height: 1.5; margin-bottom: 30px;'>¡Nos vemos pronto!</p>"
+                        + "<table cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td align='center'>"
+                        + "<a href='https://barberturn.netlify.app/' style='display: inline-block; background-color: #FFD700; color: #333333; text-decoration: none; font-weight: bold; padding: 12px 30px; border-radius: 25px; font-size: 16px;'>Ver mi reserva</a>"
+                        + "</td></tr></table></td></tr>"
+                        + "<tr><td style='background-color: #333333; padding: 30px; text-align: center;'>"
+                        + "<p style='color: #ffffff; font-size: 14px; margin: 0 0 10px 0;'>¡Gracias por elegir BarberTurn!</p>"
+                        + "<p style='color: #ffffff; font-size: 14px; margin: 0;'>El equipo de BarberTurn</p>"
+                        + "</td></tr></table></td></tr></table></body></html>";
+
+                // Enviar correo al cliente
+                System.out.println("Enviando correo a: " + turno.getEmailCliente());
+                emailService.sendHtmlEmail(turno.getEmailCliente(), subject, htmlContent);
+            }
+        }
     }
 }

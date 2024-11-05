@@ -6,6 +6,7 @@ package com.Aplication.repository;
 
 import com.Aplication.modelo.Turno;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,4 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TurnoRepository extends JpaRepository<Turno, Long> {
     
      Optional<Turno> findByBarberoAndFechaAndHora(String barbero, LocalDate fecha, String hora);
+     
+     // Buscar turnos para una fecha específica y dentro de un rango de hora
+    List<Turno> findByFechaAndHoraBetween(LocalDate fecha, String horaInicio, String horaFin);
 }
