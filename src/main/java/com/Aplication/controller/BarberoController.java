@@ -7,6 +7,7 @@ package com.Aplication.controller;
 import com.Aplication.Services.BarberoService;
 import com.Aplication.modelo.Barbero;
 import com.Aplication.modelodto.BarberoDTO;
+import jakarta.mail.MessagingException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class BarberoController {
     private BarberoService barberoService;
 
     @PostMapping("/post")
-    public ResponseEntity<Barbero> createBarbero(@RequestBody Barbero barbero) {
+    public ResponseEntity<Barbero> createBarbero(@RequestBody Barbero barbero) throws MessagingException {
         Barbero nuevoBarbero = barberoService.create(barbero);
         return new ResponseEntity<>(nuevoBarbero, HttpStatus.CREATED);
     }

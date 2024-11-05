@@ -1,8 +1,10 @@
 
 package com.Aplication.Services;
 
+import com.Aplication.modelo.Barbero;
 import com.Aplication.modelo.Cliente;
 import com.Aplication.repository.ClienteRepository;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +16,63 @@ import java.util.Optional;
 public class ClienteServices {
     @Autowired
     private ClienteRepository clienteRepository;
+    
+    @Autowired
+    private EmailService emailService;
 
     // Método para guardar un cliente
-    public Cliente create(Cliente cliente) {
+    public Cliente create(Cliente cliente) throws MessagingException {
         // Guardamos el cliente en la base de datos y lo devolvemos
-        return clienteRepository.save(cliente);
+        Cliente savedCliente = clienteRepository.save(cliente);
+
+        String htmlContent
+                = "<html>"
+                + "<head>"
+                + "<meta charset='UTF-8'>"
+                + "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                + "</head>"
+                + "<body style='font-family: Helvetica Neue, Arial, sans-serif; margin: 0; padding: 0; background-color: #f6f6f6;'>"
+                + "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='background-color: #f6f6f6; padding: 20px;'>"
+                + "<tr>"
+                + "<td align='center'>"
+                + "<table cellpadding='0' cellspacing='0' border='0' width='600' style='background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);'>"
+                + "<tr>"
+                + "<td style='padding: 40px 0; text-align: center; background-color: #FFD700;'>"
+                + "<h1 style='color: #333333; font-size: 28px; margin: 0;'>¡Bienvenido a BarberTurn!</h1>"
+                + "</td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td style='padding: 40px 30px;'>"
+                + "<p style='color: #333333; font-size: 16px; line-height: 1.5; margin-bottom: 20px;'>Hola <strong>" + savedCliente.getNombre() + " " + savedCliente.getApellido() + "</strong>,</p>"
+                + "<p style='color: #333333; font-size: 16px; line-height: 1.5; margin-bottom: 20px;'>Gracias por registrarte en BarberTurn. Estamos emocionados de tenerte como cliente y esperamos que disfrutes de nuestros servicios.</p>"
+                + "<p style='color: #333333; font-size: 16px; line-height: 1.5; margin-bottom: 30px;'>Si tienes alguna pregunta o necesitas asistencia para hacer una reserva, no dudes en contactarnos. Estamos aquí para ayudarte.</p>"
+                + "<table cellpadding='0' cellspacing='0' border='0' width='100%'>"
+                + "<tr>"
+                + "<td align='center'>"
+                + "<a href='https://barberturn.netlify.app/' style='display: inline-block; background-color: #FFD700; color: #333333; text-decoration: none; font-weight: bold; padding: 12px 30px; border-radius: 25px; font-size: 16px;'>Reserva tu turno ahora</a>"
+                + "</td>"
+                + "</tr>"
+                + "</table>"
+                + "</td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td style='background-color: #333333; padding: 30px; text-align: center;'>"
+                + "<p style='color: #ffffff; font-size: 14px; margin: 0 0 10px 0;'>¡Saludos!</p>"
+                + "<p style='color: #ffffff; font-size: 14px; margin: 0;'>El equipo de BarberTurn</p>"
+                + "</td>"
+                + "</tr>"
+                + "</table>"
+                + "</td>"
+                + "</tr>"
+                + "</table>"
+                + "</body>"
+                + "</html>";
+
+        emailService.sendHtmlEmail(savedCliente.getEmail(),
+                "Bienvenido a BarberTurn",
+                htmlContent);
+
+        return savedCliente;
     }
 
     // Lista
@@ -33,6 +87,10 @@ public class ClienteServices {
     public Optional<Cliente> findBynombre(String nombre) {
         return clienteRepository.findBynombre(nombre);
     }
+    
+    public Optional<Cliente> findById(Long id) {
+        return clienteRepository.findById(id);
+    }
 
     public Cliente updateCliente(Long id, Cliente updatedCliente) {
         return clienteRepository.findById(id).map((Cliente cliente) -> {
@@ -40,7 +98,6 @@ public class ClienteServices {
             cliente.setApellido(updatedCliente.getApellido());
             cliente.setTelefono(updatedCliente.getTelefono());
             cliente.setEmail(updatedCliente.getEmail());
-            cliente.setRol(updatedCliente.getRol());
             return clienteRepository.save(cliente); // Guardar cliente actualizado
         }).orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
     }

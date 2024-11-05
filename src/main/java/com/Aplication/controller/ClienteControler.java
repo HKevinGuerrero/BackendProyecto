@@ -4,6 +4,7 @@ package com.Aplication.controller;
 
 import com.Aplication.Services.ClienteServices;
 import com.Aplication.modelo.Cliente;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class ClienteControler {
     private ClienteServices clienteServices;
 
     @PostMapping("/post")
-    public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente) throws MessagingException {
         Cliente nuevoCliente = clienteServices.create(cliente);
         return new ResponseEntity<>(nuevoCliente, HttpStatus.CREATED);
     }
