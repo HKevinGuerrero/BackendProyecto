@@ -25,13 +25,13 @@ public class TurnoService {
 
     // Crear o actualizar un turno
     public Turno saveOrUpdate(Turno turno) {
-        // Verificar si ya existe un turno para el mismo barbero, fecha y hora
-        Optional<Turno> turnoExistente = turnoRepository.findByBarberoAndFechaAndHora(
-             turno.getBarbero(), turno.getFecha(), turno.getHora()
+        // Verificar si ya existe un turno para el mismo barbero, local, fecha y hora
+        Optional<Turno> turnoExistente = turnoRepository.findByBarberoAndLocalAndFechaAndHora(
+                turno.getBarbero(), turno.getLocal(), turno.getFecha(), turno.getHora()
         );
 
         if (turnoExistente.isPresent()) {
-            throw new RuntimeException("Este turno ya está reservado para esta fecha y hora con este barbero");
+            throw new RuntimeException("Este turno ya está reservado para esta fecha y hora con este barbero en el local especificado.");
         }
 
         return turnoRepository.save(turno);
@@ -73,7 +73,7 @@ public class TurnoService {
     public void sendTurnoReminder() throws MessagingException {
         System.out.println("Revisando los turnos...");
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime reminderTime = now.plusMinutes(20); // 20 minutos antes del turno
+        LocalDateTime reminderTime = now.plusMinutes(5); // 20 minutos antes del turno
 
         // Obtiene la hora actual y la hora del recordatorio
         LocalTime nowTime = now.toLocalTime();
