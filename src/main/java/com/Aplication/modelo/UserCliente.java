@@ -34,9 +34,11 @@ public class UserCliente {
 
     private String password;
     
-    private String token;
-    
     private String rol;
+    
+    private String cardNumber;
+    private String expiryDate;
+    private String cvv;
     
     
 }

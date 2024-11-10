@@ -8,10 +8,12 @@ import com.Aplication.modelo.Barbero;
 import com.Aplication.modelodto.BarberoDTO;
 import com.Aplication.repository.BarberoRepository;
 import jakarta.mail.MessagingException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -116,4 +118,24 @@ public class BarberoService {
             return barberoRepository.save(barbero); // Guardar barbero actualizado
         }).orElseThrow(() -> new RuntimeException("Barbero no encontrado"));
     }
+    
+    public Barbero uploadImage(Long Id, MultipartFile imagen) throws IOException {
+        // Encontrar al cliente por su ID
+        Optional<Barbero> barberoOptional = barberoRepository.findById(Id);
+
+        if (barberoOptional.isPresent()) {
+            Barbero barbero = barberoOptional.get();
+            barbero.setImagen(imagen.getBytes()); // Establecer la imagen
+            return barberoRepository.save(barbero); // Guardar el cliente actualizado
+        } else {
+            throw new RuntimeException("barbero no encontrado");
+        }
+    }
+    
+    public byte[] getImage(Long id) {
+        Barbero barbero = barberoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Barbero no encontrado"));
+        return barbero.getImagen(); // Devuelve la imagen almacenada como byte[]
+    }
+
 }

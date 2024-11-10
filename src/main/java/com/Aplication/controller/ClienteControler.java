@@ -5,12 +5,15 @@ package com.Aplication.controller;
 import com.Aplication.Services.ClienteServices;
 import com.Aplication.modelo.Cliente;
 import jakarta.mail.MessagingException;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -41,8 +44,8 @@ public class ClienteControler {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCliente(@PathVariable String nombre) {
-        return clienteServices.findBynombre(nombre) // Buscar el cliente por nombre
+    public ResponseEntity<Void> deleteCliente(@PathVariable Long id) {
+        return clienteServices.findById(id) // Buscar el cliente por nombre
                 .map(cliente -> {
                     clienteServices.delete(cliente); // Eliminar cliente si existe
                     return new ResponseEntity<Void>(HttpStatus.NO_CONTENT); // Respuesta 204 si se elimina correctamente
@@ -61,6 +64,33 @@ public class ClienteControler {
         }
 
     }
-}
+    //Cargar imagen
+    @PutMapping("/imagen/{id}")
+    public ResponseEntity<Cliente> updateClienteImage(
+            @PathVariable Long id,
+            @RequestPart("imagen") MultipartFile imagen) {
+        try {
+            Cliente cliente = clienteServices.uploadImage(id, imagen);
+            return new ResponseEntity<>(cliente, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    
+    //Obtiene imagen
+    @GetMapping("/imagen/{id}")
+    public ResponseEntity<byte[]> getClienteImage(@PathVariable Long id) {
+        try {
+            byte[] imagen = clienteServices.getImage(id); 
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG) 
+                    .body(imagen);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Si no se encuentra el cliente
+        }
+    }
+
+
+}
 

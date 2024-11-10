@@ -6,10 +6,12 @@ package com.Aplication.Services;
 
 import com.Aplication.modelo.Admin;
 import com.Aplication.repository.AdminRepository;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -37,22 +39,38 @@ public class AdminServices {
     }
 
     // Método para encontrar administrador por nombre
-    public Optional<Admin> findByNombreRegistro(String nombreRegistro) {
-        return adminRepository.findByNombreRegistro(nombreRegistro);
+    public Optional<Admin> findByNombre(String nombre) {
+        return adminRepository.findByNombre(nombre);
     }
-
 
     // Método para actualizar un administrador
     public Admin updateAdmin(Long id, Admin updatedAdmin) {
         return adminRepository.findById(id).map(admin -> {
-            admin.setNombreRegistro(updatedAdmin.getNombreRegistro());
-            admin.setApellidoRegistro(updatedAdmin.getApellidoRegistro());
-            admin.setTelefonoRegistro(updatedAdmin.getTelefonoRegistro());
-            admin.setCorreo(updatedAdmin.getCorreo());
-            admin.setRol(updatedAdmin.getRol());
-            admin.setLocal(updatedAdmin.getLocal());
-            admin.setContrasena(updatedAdmin.getContrasena());
+            admin.setNombre(updatedAdmin.getNombre());
+            admin.setApellido(updatedAdmin.getApellido());
+            admin.setTelefono(updatedAdmin.getTelefono());
+            admin.setEmail(updatedAdmin.getEmail());
             return adminRepository.save(admin); // Guardar administrador actualizado
         }).orElseThrow(() -> new RuntimeException("Administrador no encontrado"));
     }
+    
+    public Admin uploadImage(Long id, MultipartFile imagen) throws IOException {
+        // Encontrar al administrador por su ID
+        Optional<Admin> adminOptional = adminRepository.findById(id);
+
+        if (adminOptional.isPresent()) {
+            Admin admin = adminOptional.get();
+            admin.setImagen(imagen.getBytes()); // Establecer la imagen
+            return adminRepository.save(admin); // Guardar el administrador actualizado
+        } else {
+            throw new RuntimeException("Administrador no encontrado");
+        }
+    }
+    
+    public byte[] getImage(Long id) {
+        Admin admin = adminRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Administrador no encontrado"));
+        return admin.getImagen(); // Devuelve la imagen almacenada como byte[]
+    }
+
 }

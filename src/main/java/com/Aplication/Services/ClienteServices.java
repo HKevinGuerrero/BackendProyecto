@@ -5,11 +5,13 @@ import com.Aplication.modelo.Barbero;
 import com.Aplication.modelo.Cliente;
 import com.Aplication.repository.ClienteRepository;
 import jakarta.mail.MessagingException;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 
@@ -98,9 +100,31 @@ public class ClienteServices {
             cliente.setApellido(updatedCliente.getApellido());
             cliente.setTelefono(updatedCliente.getTelefono());
             cliente.setEmail(updatedCliente.getEmail());
-            return clienteRepository.save(cliente); // Guardar cliente actualizado
+            return clienteRepository.save(cliente); 
         }).orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
     }
+    
+    public Cliente uploadImage(Long Id, MultipartFile imagen) throws IOException {
+        // Encontrar al cliente por su ID
+        Optional<Cliente> clienteOptional = clienteRepository.findById(Id);
+
+        if (clienteOptional.isPresent()) {
+            Cliente cliente = clienteOptional.get();
+            cliente.setImagen(imagen.getBytes()); // Establecer la imagen
+            return clienteRepository.save(cliente); // Guardar el cliente actualizado
+        } else {
+            throw new RuntimeException("Cliente no encontrado");
+        }
+    }
+
+    
+    public byte[] getImage(Long id) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+        return cliente.getImagen(); 
+    }
+
+
 
 
 }

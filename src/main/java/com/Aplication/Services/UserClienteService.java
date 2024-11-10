@@ -42,24 +42,23 @@ public class UserClienteService {
         return userRepository.findByUsername(nombre);
     }
     
-    // Método para actualizar un cliente
+    public Optional<UserCliente> findById(Long id) {
+        return userRepository.findById(id);
+    }
+    
+    
+    
     public UserCliente update(UserCliente updatedUser) {
-        // Verifica si el cliente existe en la base de datos
-        Optional<UserCliente> existingUser = userRepository.findById(updatedUser.getId());
-        if (existingUser.isPresent()) {
-            UserCliente user = existingUser.get();
+        return userRepository.findById(updatedUser.getId()).map(user -> {
             // Actualiza los campos necesarios
             user.setUsername(updatedUser.getUsername());
             user.setPassword(updatedUser.getPassword());
+            user.setCardNumber(updatedUser.getCardNumber());
+            user.setExpiryDate(updatedUser.getExpiryDate());
+            user.setCvv(updatedUser.getCvv());
             // Guarda el cliente actualizado y lo devuelve
             return userRepository.save(user);
-        } else {
-            throw new IllegalArgumentException("El cliente no existe en la base de datos.");
-        }
+        }).orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
     }
 
-
-    
-    
-    
 }

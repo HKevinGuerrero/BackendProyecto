@@ -8,9 +8,11 @@ import com.Aplication.Services.BarberoService;
 import com.Aplication.modelo.Barbero;
 import com.Aplication.modelodto.BarberoDTO;
 import jakarta.mail.MessagingException;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,13 +22,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
  * @author KEVIN-PC
  */
-
 
 @RestController
 @RequestMapping("/api/barberos")
@@ -55,9 +58,9 @@ public class BarberoController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/{nombre}")
-    public ResponseEntity<Void> deleteBarbero(@PathVariable String nombre) {
-        return barberoService.findByNombre(nombre) // Buscar el barbero por nombre
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBarbero(@PathVariable Long id) {
+        return barberoService.findById(id) // Buscar el barbero por id
                 .map(barbero -> {
                     barberoService.delete(barbero); // Eliminar barbero si existe
                     return new ResponseEntity<Void>(HttpStatus.NO_CONTENT); // Respuesta 204 si se elimina correctamente
@@ -65,13 +68,41 @@ public class BarberoController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND)); // Respuesta 404 si no se encuentra el barbero
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<Barbero> updateBarbero(@PathVariable Long id, @RequestBody Barbero updatedBarbero) {
         try {
-            Barbero barberoActualizado = barberoService.updateBarbero(id, updatedBarbero);
-            return new ResponseEntity<>(barberoActualizado, HttpStatus.OK);
+            Barbero barbero = barberoService.updateBarbero(id, updatedBarbero);
+            return new ResponseEntity<>(barbero, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    
+    //Agregar imagen
+    @PutMapping("/imagen/{id}")
+    public ResponseEntity<Barbero> updateClienteImage(
+            @PathVariable Long id,
+            @RequestPart("imagen") MultipartFile imagen) {
+        try {
+            Barbero barbero = barberoService.uploadImage(id, imagen);
+            return new ResponseEntity<>(barbero, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    //Obtiene imagen
+    @GetMapping("/imagen/{id}")
+    public ResponseEntity<byte[]> getBarberoImage(@PathVariable Long id) {
+        try {
+            byte[] imagen = barberoService.getImage(id); 
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG) 
+                    .body(imagen);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+        }
+    }
+
 }

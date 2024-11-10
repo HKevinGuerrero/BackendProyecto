@@ -10,6 +10,7 @@ import com.Aplication.modelo.Cliente;
 import com.Aplication.modelo.UserCliente;
 import com.Aplication.modelodto.UserClienteDTO;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,17 +50,47 @@ public class UserClienteController {
  
     }
     
-    // Endpoint para actualizar un cliente
     @PutMapping("/{id}")
     public ResponseEntity<UserCliente> updateCliente(@PathVariable Long id, @RequestBody UserCliente updatedUser) {
         try {
             // Establece el ID del cliente que se quiere actualizar
             updatedUser.setId(id);
-            // Llama al servicio para actualizar el cliente
-            UserCliente user = userService.update(updatedUser);
-            return ResponseEntity.ok(user);
+
+            // Busca el cliente existente
+            Optional<UserCliente> existingUserOpt = userService.findById(id);
+            if (!existingUserOpt.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            UserCliente existingUser = existingUserOpt.get();
+
+            // Actualiza solo los campos proporcionados
+            if (updatedUser.getUsername() != null) {
+                existingUser.setUsername(updatedUser.getUsername());
+            }
+            if (updatedUser.getPassword() != null) {
+                existingUser.setPassword(updatedUser.getPassword());
+            }
+            if (updatedUser.getRol() != null) {
+                existingUser.setRol(updatedUser.getRol());
+            }
+            if (updatedUser.getCardNumber() != null) {
+                existingUser.setCardNumber(updatedUser.getCardNumber());
+            }
+            if (updatedUser.getExpiryDate() != null) {
+                existingUser.setExpiryDate(updatedUser.getExpiryDate());
+            }
+            if (updatedUser.getCvv() != null) {
+                existingUser.setCvv(updatedUser.getCvv());
+            }
+
+            // Guarda el cliente actualizado
+            userService.update(existingUser);
+
+            return ResponseEntity.ok(existingUser);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
 }

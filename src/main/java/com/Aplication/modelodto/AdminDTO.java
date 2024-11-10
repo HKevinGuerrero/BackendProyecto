@@ -11,8 +11,21 @@ package com.Aplication.modelodto;
 public class AdminDTO {
 
     /**
-     * @return the id
+     * @return the Rol
      */
+    public String getRol() {
+        return Rol;
+    }
+
+    /**
+     * @param Rol the Rol to set
+     */
+    public void setRol(String Rol) {
+        this.Rol = Rol;
+    }
+
+    
+   
     public Long getId() {
         return id;
     }
@@ -25,127 +38,70 @@ public class AdminDTO {
     }
 
     /**
-     * @return the nombreRegistro
+     * @return the nombre
      */
-    public String getNombreRegistro() {
-        return nombreRegistro;
+    public String getNombre() {
+        return nombre;
     }
 
     /**
-     * @param nombreRegistro the nombreRegistro to set
+     * @param nombre the nombre to set
      */
-    public void setNombreRegistro(String nombreRegistro) {
-        this.nombreRegistro = nombreRegistro;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     /**
-     * @return the apellidoRegistro
+     * @return the apellido
      */
-    public String getApellidoRegistro() {
-        return apellidoRegistro;
+    public String getApellido() {
+        return apellido;
     }
 
     /**
-     * @param apellidoRegistro the apellidoRegistro to set
+     * @param apellido the apellido to set
      */
-    public void setApellidoRegistro(String apellidoRegistro) {
-        this.apellidoRegistro = apellidoRegistro;
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
     /**
-     * @return the telefonoRegistro
+     * @return the telefono
      */
-    public Long getTelefonoRegistro() {
-        return telefonoRegistro;
+    public Long getTelefono() {
+        return telefono;
     }
 
     /**
-     * @param telefonoRegistro the telefonoRegistro to set
+     * @param telefono the telefono to set
      */
-    public void setTelefonoRegistro(Long telefonoRegistro) {
-        this.telefonoRegistro = telefonoRegistro;
+    public void setTelefono(Long telefono) {
+        this.telefono = telefono;
     }
 
     /**
-     * @return the correo
+     * @return the email
      */
-    public String getCorreo() {
-        return correo;
+    public String getEmail() {
+        return email;
     }
 
     /**
-     * @param correo the correo to set
+     * @param email the email to set
      */
-    public void setCorreo(String correo) {
-        this.correo = correo;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    /**
-     * @return the rol
-     */
-    public String getRol() {
-        return rol;
-    }
 
-    /**
-     * @param rol the rol to set
-     */
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
 
-    /**
-     * @return the local
-     */
-    public String getLocal() {
-        return local;
-    }
-
-    /**
-     * @param local the local to set
-     */
-    public void setLocal(String local) {
-        this.local = local;
-    }
-
-    /**
-     * @return the direccionRegistro
-     */
-    public String getDireccionRegistro() {
-        return direccionRegistro;
-    }
-
-    /**
-     * @param direccionRegistro the direccionRegistro to set
-     */
-    public void setDireccionRegistro(String direccionRegistro) {
-        this.direccionRegistro = direccionRegistro;
-    }
-
-    /**
-     * @return the contrasenaRegistro
-     */
-    public String getContrasenaRegistro() {
-        return contrasenaRegistro;
-    }
-
-    /**
-     * @param contrasenaRegistro the contrasenaRegistro to set
-     */
-    public void setContrasenaRegistro(String contrasenaRegistro) {
-        this.contrasenaRegistro = contrasenaRegistro;
-    }
-
+  
     
- 
     private Long id;
-    private String nombreRegistro;
-    private String apellidoRegistro;
-    private Long telefonoRegistro;
-    private String correo;
-    private String rol;
-    private String local;
-    private String direccionRegistro;
-    private String contrasenaRegistro;
+    private String nombre;
+    private String apellido;
+    private Long telefono;
+    private String email;
+    private String Rol;
     
 }

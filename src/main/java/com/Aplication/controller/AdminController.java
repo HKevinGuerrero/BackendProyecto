@@ -6,9 +6,11 @@ package com.Aplication.controller;
 
 import com.Aplication.Services.AdminServices;
 import com.Aplication.modelo.Admin;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,13 +20,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
  * @author KEVIN-PC
  */
-
 @RestController
 @RequestMapping("/api/adminbarberia")
 @CrossOrigin(origins = {"http://localhost:3000", "https://barberturn.netlify.app"})
@@ -45,15 +48,15 @@ public class AdminController {
     }
 
     @GetMapping("/{nombre}")
-    public ResponseEntity<Admin> getAdminByNombre(@PathVariable String nombreRegistro) {
-        return adminServices.findByNombreRegistro(nombreRegistro)
+    public ResponseEntity<Admin> getAdminByNombre(@PathVariable String nombre) {
+        return adminServices.findByNombre(nombre)
                 .map(admin -> new ResponseEntity<>(admin, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{nombre}")
-    public ResponseEntity<Void> deleteAdmin(@PathVariable String nombreRegistro) {
-        return adminServices.findByNombreRegistro(nombreRegistro) // Buscar el administrador por nombre
+    public ResponseEntity<Void> deleteAdmin(@PathVariable String nombre) {
+        return adminServices.findByNombre(nombre) // Buscar el administrador por nombre
                 .map(admin -> {
                     adminServices.delete(admin); // Eliminar administrador si existe
                     return new ResponseEntity<Void>(HttpStatus.NO_CONTENT); // Respuesta 204 si se elimina correctamente
@@ -70,5 +73,30 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-}
+    
+    //Agregar imagen
+    @PutMapping("/imagen/{id}")
+    public ResponseEntity<Admin> updateClienteImage(
+            @PathVariable Long id,
+            @RequestPart("imagen") MultipartFile imagen) {
+        try {
+            Admin admin = adminServices.uploadImage(id, imagen);
+            return new ResponseEntity<>(admin, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @GetMapping("/imagen/{id}")
+    public ResponseEntity<byte[]> getAdminImage(@PathVariable Long id) {
+        try {
+            byte[] imagen = adminServices.getImage(id); // Obtiene la imagen
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG) // O el tipo de imagen que has almacenado
+                    .body(imagen);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Si no se encuentra el admin
+        }
+    }
 
+}

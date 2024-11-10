@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,22 +31,18 @@ public class Admin {
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Long id;
     
-    private String nombreRegistro;
+    private String nombre;
     
-    private String apellidoRegistro;
+    private String apellido;
     
     @Column(unique=true)
-    private Long telefonoRegistro;
+    private Long telefono;
     
      @Column(unique=true)
-    private String correo;
+    private String email;
     
-    private String rol;
+    private String Rol;
     
-    private String local;
-    
-    private String direccionRegistro;
-    
-    private String contrasena;
-    
+    @Lob
+    private byte[] imagen;
 }

@@ -11,6 +11,20 @@ package com.Aplication.modelodto;
 public class BarberoDTO {
 
     /**
+     * @return the imagen
+     */
+    public byte[] getImagen() {
+        return imagen;
+    }
+
+    /**
+     * @param imagen the imagen to set
+     */
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
+    }
+
+    /**
      * @return the Rol
      */
     public String getRol() {
@@ -117,4 +131,5 @@ public class BarberoDTO {
     private String email;
     private String Rol;
     private String local;
+    private byte[] imagen;
 }
