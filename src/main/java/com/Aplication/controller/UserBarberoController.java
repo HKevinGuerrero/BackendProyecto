@@ -13,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,6 +50,20 @@ public class UserBarberoController {
         List<UserBarbero> user = userService.getAllUser();
         return new ResponseEntity<>(user, HttpStatus.OK);
  
+    }
+    
+    // Endpoint para actualizar un barbero
+    @PutMapping("/{id}")
+    public ResponseEntity<UserBarbero> updateBarbero(@PathVariable Long id, @RequestBody UserBarbero updatedUser) {
+        try {
+            // Establece el ID del barbero que se quiere actualizar
+            updatedUser.setId(id);
+            // Llama al servicio para actualizar el barbero
+            UserBarbero user = userService.update(updatedUser);
+            return ResponseEntity.ok(user);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
     
 }

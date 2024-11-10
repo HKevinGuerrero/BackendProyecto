@@ -48,4 +48,20 @@ public class UserBarberoService {
         return userBarberoRepository.findByUsername(nombre);
     }
     
+    // Método para actualizar un barbero
+    public UserBarbero update(UserBarbero updatedUser) {
+        // Verifica si el barbero existe en la base de datos
+        Optional<UserBarbero> existingUser = userBarberoRepository.findById(updatedUser.getId());
+        if (existingUser.isPresent()) {
+            UserBarbero user = existingUser.get();
+            // Actualiza los campos necesarios
+            user.setUsername(updatedUser.getUsername());
+            user.setPassword(updatedUser.getPassword());
+            // Guarda el barbero actualizado y lo devuelve
+            return userBarberoRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("El barbero no existe en la base de datos.");
+        }
+    }
+
 }

@@ -41,6 +41,23 @@ public class UserClienteService {
     public Optional<UserCliente> findBynombre(String nombre) {
         return userRepository.findByUsername(nombre);
     }
+    
+    // Método para actualizar un cliente
+    public UserCliente update(UserCliente updatedUser) {
+        // Verifica si el cliente existe en la base de datos
+        Optional<UserCliente> existingUser = userRepository.findById(updatedUser.getId());
+        if (existingUser.isPresent()) {
+            UserCliente user = existingUser.get();
+            // Actualiza los campos necesarios
+            user.setUsername(updatedUser.getUsername());
+            user.setPassword(updatedUser.getPassword());
+            // Guarda el cliente actualizado y lo devuelve
+            return userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("El cliente no existe en la base de datos.");
+        }
+    }
+
 
     
     
