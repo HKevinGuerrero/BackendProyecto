@@ -48,6 +48,11 @@ public class UserBarberoService {
         return userBarberoRepository.findByUsername(nombre);
     }
     
+        public Optional<UserBarbero> findById(Long id) {
+        return userBarberoRepository.findById(id);
+    }
+    
+    
     // Método para actualizar un barbero
     public UserBarbero update(UserBarbero updatedUser) {
         return userBarberoRepository.findById(updatedUser.getId()).map(user -> {

@@ -54,16 +54,19 @@ public class UserBarberoController {
     
     // Endpoint para actualizar un barbero
     @PutMapping("/{id}")
-    public ResponseEntity<UserBarbero> updateBarbero(@PathVariable Long id, @RequestBody UserBarbero updatedUser) {
-        try {
-            // Establece el ID del barbero que se quiere actualizar
-            updatedUser.setId(id);
-            // Llama al servicio para actualizar el barbero
-            UserBarbero user = userService.update(updatedUser);
-            return ResponseEntity.ok(user);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    public UserBarbero update(UserBarbero updatedUser) {
+        return userService.findById(updatedUser.getId()).map(user -> {
+            // Actualiza solo los campos proporcionados que no sean nulos
+            if (updatedUser.getUsername() != null) {
+                user.setUsername(updatedUser.getUsername());
+            }
+            if (updatedUser.getPassword() != null) {
+                user.setPassword(updatedUser.getPassword());
+            }
+            // Guarda el cliente actualizado y lo devuelve
+            return userService.create(user);
+        }).orElseThrow(() -> new RuntimeException("Barbero no encontrado"));
     }
+
     
 }
