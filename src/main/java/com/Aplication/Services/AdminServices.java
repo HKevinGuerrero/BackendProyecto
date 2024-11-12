@@ -38,10 +38,6 @@ public class AdminServices {
         adminRepository.delete(admin);
     }
 
-    // Método para encontrar administrador por nombre
-    public Optional<Admin> findByNombreRegistro(String nombreRegistro) {
-        return adminRepository.findByNombreRegistro(nombreRegistro);
-    }
     
     public Optional<Admin> findById(Long id) {
         return adminRepository.findById(id);
