@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/adminbarberia")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://barberturn.netlify.app"})
 public class AdminController {
     @Autowired
     private AdminServices adminServices;
