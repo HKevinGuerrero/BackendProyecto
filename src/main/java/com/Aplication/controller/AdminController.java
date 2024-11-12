@@ -28,9 +28,10 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * @author KEVIN-PC
  */
+
 @RestController
 @RequestMapping("/api/adminbarberia")
-@CrossOrigin(origins = {"http://localhost:3000", "https://barberturn.netlify.app"})
+@CrossOrigin(origins = "http://localhost:3000")
 public class AdminController {
     @Autowired
     private AdminServices adminServices;
@@ -47,16 +48,16 @@ public class AdminController {
         return new ResponseEntity<>(admins, HttpStatus.OK);
     }
 
-    @GetMapping("/{nombre}")
-    public ResponseEntity<Admin> getAdminByNombre(@PathVariable String nombre) {
-        return adminServices.findByNombre(nombre)
+    @GetMapping("/{id}")
+    public ResponseEntity<Admin> getAdminByNombre(@PathVariable Long id) {
+        return adminServices.findById(id)
                 .map(admin -> new ResponseEntity<>(admin, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/{nombre}")
-    public ResponseEntity<Void> deleteAdmin(@PathVariable String nombre) {
-        return adminServices.findByNombre(nombre) // Buscar el administrador por nombre
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAdmin(@PathVariable Long id) {
+        return adminServices.findById(id) // Buscar el administrador por nombre
                 .map(admin -> {
                     adminServices.delete(admin); // Eliminar administrador si existe
                     return new ResponseEntity<Void>(HttpStatus.NO_CONTENT); // Respuesta 204 si se elimina correctamente
@@ -98,5 +99,5 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Si no se encuentra el admin
         }
     }
-
 }
+

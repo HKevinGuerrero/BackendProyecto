@@ -39,10 +39,17 @@ public class Admin {
     private Long telefono;
     
      @Column(unique=true)
-    private String email;
+    private String correo;
     
-    private String Rol;
+    private String rol;
+    
+    private String local;
+    
+    private String direccion;
+    
+    private String contrasena;
     
     @Lob
     private byte[] imagen;
+    
 }

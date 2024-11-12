@@ -11,21 +11,8 @@ package com.Aplication.modelodto;
 public class AdminDTO {
 
     /**
-     * @return the Rol
+     * @return the id
      */
-    public String getRol() {
-        return Rol;
-    }
-
-    /**
-     * @param Rol the Rol to set
-     */
-    public void setRol(String Rol) {
-        this.Rol = Rol;
-    }
-
-    
-   
     public Long getId() {
         return id;
     }
@@ -80,28 +67,102 @@ public class AdminDTO {
     }
 
     /**
-     * @return the email
+     * @return the correo
      */
-    public String getEmail() {
-        return email;
+    public String getCorreo() {
+        return correo;
     }
 
     /**
-     * @param email the email to set
+     * @param correo the correo to set
      */
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    /**
+     * @return the rol
+     */
+    public String getRol() {
+        return rol;
+    }
+
+    /**
+     * @param rol the rol to set
+     */
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    /**
+     * @return the local
+     */
+    public String getLocal() {
+        return local;
+    }
+
+    /**
+     * @param local the local to set
+     */
+    public void setLocal(String local) {
+        this.local = local;
+    }
+
+    /**
+     * @return the direccion
+     */
+    public String getDireccion() {
+        return direccion;
+    }
+
+    /**
+     * @param direccion the direccion to set
+     */
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    /**
+     * @return the contrasena
+     */
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    /**
+     * @param contrasena the contrasena to set
+     */
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
+    /**
+     * @return the imagen
+     */
+    public byte[] getImagen() {
+        return imagen;
+    }
+
+    /**
+     * @param imagen the imagen to set
+     */
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
     }
 
 
 
-  
     
+ 
     private Long id;
     private String nombre;
     private String apellido;
     private Long telefono;
-    private String email;
-    private String Rol;
+    private String correo;
+    private String rol;
+    private String local;
+    private String direccion;
+    private String contrasena;
+    private byte[] imagen;
     
 }
