@@ -39,11 +39,26 @@ public class LocalService {
 
     public Local updateLocal(Long id, Local updateLocal) {
         return localRepository.findById(id).map(local -> {
-            local.setIdlocal(updateLocal.getIdlocal());
-            local.setLocal(updateLocal.getLocal());
-            local.setTelefonoRegistro(updateLocal.getTelefonoRegistro());
-            local.setDireccionRegistro(updateLocal.getDireccionRegistro());
-            return localRepository.save(local); // Guardar local actualizado
+            if (updateLocal.getLocal() != null) {
+                local.setLocal(updateLocal.getLocal());
+            }
+            if (updateLocal.getTelefonoRegistro() != null) {
+                local.setTelefonoRegistro(updateLocal.getTelefonoRegistro());
+            }
+            if (updateLocal.getDireccionRegistro() != null) {
+                local.setDireccionRegistro(updateLocal.getDireccionRegistro());
+            }
+
+            // Solo actualiza la imagen si se ha enviado una nueva
+            if (updateLocal.getImagen() != null) {
+                local.setImagen(updateLocal.getImagen());
+            } else {
+                // Mantiene la imagen actual si no se ha enviado una nueva
+                updateLocal.setImagen(local.getImagen());
+            }
+
+            // Guarda el local actualizado
+            return localRepository.save(local);
         }).orElseThrow(() -> new RuntimeException("Local no encontrado"));
     }
     

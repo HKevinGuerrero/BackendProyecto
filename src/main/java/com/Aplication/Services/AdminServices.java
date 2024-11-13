@@ -45,19 +45,47 @@ public class AdminServices {
     
 
 
-    // Método para actualizar un administrador
     public Admin updateAdmin(Long id, Admin updatedAdmin) {
         return adminRepository.findById(id).map(admin -> {
-            admin.setNombre(updatedAdmin.getNombre());
-            admin.setApellido(updatedAdmin.getApellido());
-            admin.setTelefono(updatedAdmin.getTelefono());
-            admin.setCorreo(updatedAdmin.getCorreo());
-            admin.setRol(updatedAdmin.getRol());
-            admin.setLocal(updatedAdmin.getLocal());
-            admin.setContrasena(updatedAdmin.getContrasena());
-            return adminRepository.save(admin); // Guardar administrador actualizado
-        }).orElseThrow(() -> new RuntimeException("Administrador no encontrado"));
+            if (updatedAdmin.getNombre() != null) {
+                admin.setNombre(updatedAdmin.getNombre());
+            }
+            if (updatedAdmin.getApellido() != null) {
+                admin.setApellido(updatedAdmin.getApellido());
+            }
+            if (updatedAdmin.getTelefono() != null) {
+                admin.setTelefono(updatedAdmin.getTelefono());
+            }
+            if (updatedAdmin.getCorreo() != null) {
+                admin.setCorreo(updatedAdmin.getCorreo());
+            }
+            if (updatedAdmin.getRol() != null) {
+                admin.setRol(updatedAdmin.getRol());
+            }
+            if (updatedAdmin.getLocal() != null) {
+                admin.setLocal(updatedAdmin.getLocal());
+            }
+            if (updatedAdmin.getDireccion() != null) {
+                admin.setDireccion(updatedAdmin.getDireccion());
+            }
+            if (updatedAdmin.getContrasena() != null) {
+                admin.setContrasena(updatedAdmin.getContrasena());
+            }
+
+            // Solo actualiza la imagen si se ha enviado una nueva
+            if (updatedAdmin.getImagen() != null) {
+                admin.setImagen(updatedAdmin.getImagen());
+            } else {
+                // Mantiene la imagen actual si no se ha enviado una nueva
+                updatedAdmin.setImagen(admin.getImagen());
+            }
+
+            // Guarda el admin actualizado
+            return adminRepository.save(admin);
+        }).orElseThrow(() -> new RuntimeException("Admin no encontrado"));
     }
+
+
     
     public Admin uploadImage(Long id, MultipartFile imagen) throws IOException {
         // Encontrar al administrador por su ID

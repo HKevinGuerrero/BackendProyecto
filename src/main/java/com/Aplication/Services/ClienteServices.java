@@ -95,14 +95,39 @@ public class ClienteServices {
     }
 
     public Cliente updateCliente(Long id, Cliente updatedCliente) {
-        return clienteRepository.findById(id).map((Cliente cliente) -> {
-            cliente.setNombre(updatedCliente.getNombre());
-            cliente.setApellido(updatedCliente.getApellido());
-            cliente.setTelefono(updatedCliente.getTelefono());
-            cliente.setEmail(updatedCliente.getEmail());
-            return clienteRepository.save(cliente); 
+        return clienteRepository.findById(id).map(cliente -> {
+            if (updatedCliente.getNombre() != null) {
+                cliente.setNombre(updatedCliente.getNombre());
+            }
+            if (updatedCliente.getApellido() != null) {
+                cliente.setApellido(updatedCliente.getApellido());
+            }
+            if (updatedCliente.getTelefono() != null) {
+                cliente.setTelefono(updatedCliente.getTelefono());
+            }
+            if (updatedCliente.getEmail() != null) {
+                cliente.setEmail(updatedCliente.getEmail());
+            }
+            if (updatedCliente.getDireccion() != null) {
+                cliente.setDireccion(updatedCliente.getDireccion());
+            }
+            if (updatedCliente.getRol() != null) {
+                cliente.setRol(updatedCliente.getRol());
+            }
+
+            // Solo actualiza la imagen si se ha enviado una nueva
+            if (updatedCliente.getImagen() != null) {
+                cliente.setImagen(updatedCliente.getImagen());
+            } else {
+                // Mantiene la imagen actual si no se ha enviado una nueva
+                updatedCliente.setImagen(cliente.getImagen());
+            }
+
+            // Guarda el cliente actualizado
+            return clienteRepository.save(cliente);
         }).orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
     }
+
     
     public Cliente uploadImage(Long Id, MultipartFile imagen) throws IOException {
         // Encontrar al cliente por su ID

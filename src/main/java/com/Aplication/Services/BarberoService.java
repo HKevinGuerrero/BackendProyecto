@@ -110,14 +110,38 @@ public class BarberoService {
     // Método para actualizar un barbero
     public Barbero updateBarbero(Long id, Barbero updatedBarbero) {
         return barberoRepository.findById(id).map(barbero -> {
-            barbero.setNombre(updatedBarbero.getNombre());
-            barbero.setApellido(updatedBarbero.getApellido());
-            barbero.setTelefono(updatedBarbero.getTelefono());
-            barbero.setEmail(updatedBarbero.getEmail());
-            barbero.setLocal(updatedBarbero.getLocal());
-            return barberoRepository.save(barbero); // Guardar barbero actualizado
+            if (updatedBarbero.getNombre() != null) {
+                barbero.setNombre(updatedBarbero.getNombre());
+            }
+            if (updatedBarbero.getApellido() != null) {
+                barbero.setApellido(updatedBarbero.getApellido());
+            }
+            if (updatedBarbero.getTelefono() != null) {
+                barbero.setTelefono(updatedBarbero.getTelefono());
+            }
+            if (updatedBarbero.getEmail() != null) {
+                barbero.setEmail(updatedBarbero.getEmail());
+            }
+            if (updatedBarbero.getLocal() != null) {
+                barbero.setLocal(updatedBarbero.getLocal());
+            }
+            if (updatedBarbero.getRol() != null) {
+                barbero.setRol(updatedBarbero.getRol());
+            }
+
+            // Solo actualiza la imagen si se ha enviado una nueva
+            if (updatedBarbero.getImagen() != null) {
+                barbero.setImagen(updatedBarbero.getImagen());
+            } else {
+                // Mantiene la imagen actual si no se ha enviado una nueva
+                updatedBarbero.setImagen(barbero.getImagen());
+            }
+
+            // Guarda el barbero actualizado
+            return barberoRepository.save(barbero);
         }).orElseThrow(() -> new RuntimeException("Barbero no encontrado"));
     }
+
     
     public Barbero uploadImage(Long Id, MultipartFile imagen) throws IOException {
         // Encontrar al cliente por su ID
