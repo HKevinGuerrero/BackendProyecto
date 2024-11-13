@@ -24,9 +24,9 @@ public class Local {
     
     private String local;
 
-    private String direccionRegistro;
+    private String direccion;
 
-    private Long telefonoRegistro;
+    private Long telefono;
     
     @Lob
     private byte[] imagen;

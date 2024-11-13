@@ -11,20 +11,6 @@ import lombok.NoArgsConstructor;
 public class Localdto {
 
     /**
-     * @return the imagen
-     */
-    public byte[] getImagen() {
-        return imagen;
-    }
-
-    /**
-     * @param imagen the imagen to set
-     */
-    public void setImagen(byte[] imagen) {
-        this.imagen = imagen;
-    }
-
-    /**
      * @return the idlocal
      */
     public Long getIdlocal() {
@@ -53,31 +39,45 @@ public class Localdto {
     }
 
     /**
-     * @return the direccionRegistro
+     * @return the direccion
      */
-    public String getDireccionRegistro() {
-        return direccionRegistro;
+    public String getDireccion() {
+        return direccion;
     }
 
     /**
-     * @param direccionRegistro the direccionRegistro to set
+     * @param direccion the direccion to set
      */
-    public void setDireccionRegistro(String direccionRegistro) {
-        this.direccionRegistro = direccionRegistro;
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     /**
-     * @return the telefonoRegistro
+     * @return the telefono
      */
-    public Long getTelefonoRegistro() {
-        return telefonoRegistro;
+    public Long getTelefono() {
+        return telefono;
     }
 
     /**
-     * @param telefonoRegistro the telefonoRegistro to set
+     * @param telefono the telefono to set
      */
-    public void setTelefonoRegistro(Long telefonoRegistro) {
-        this.telefonoRegistro = telefonoRegistro;
+    public void setTelefono(Long telefono) {
+        this.telefono = telefono;
+    }
+
+    /**
+     * @return the imagen
+     */
+    public byte[] getImagen() {
+        return imagen;
+    }
+
+    /**
+     * @param imagen the imagen to set
+     */
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
     }
 
     
@@ -85,9 +85,9 @@ public class Localdto {
     private Long idlocal;
 
     private String local;
-    private String direccionRegistro;
+    private String direccion;
 
-    private Long telefonoRegistro;
+    private Long telefono;
     private byte[] imagen;
 
 

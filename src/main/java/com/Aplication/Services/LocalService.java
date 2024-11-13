@@ -42,11 +42,11 @@ public class LocalService {
             if (updateLocal.getLocal() != null) {
                 local.setLocal(updateLocal.getLocal());
             }
-            if (updateLocal.getTelefonoRegistro() != null) {
-                local.setTelefonoRegistro(updateLocal.getTelefonoRegistro());
+            if (updateLocal.getTelefono() != null) {
+                local.setTelefono(updateLocal.getTelefono());
             }
-            if (updateLocal.getDireccionRegistro() != null) {
-                local.setDireccionRegistro(updateLocal.getDireccionRegistro());
+            if (updateLocal.getDireccion() != null) {
+                local.setDireccion(updateLocal.getDireccion());
             }
 
             // Solo actualiza la imagen si se ha enviado una nueva
