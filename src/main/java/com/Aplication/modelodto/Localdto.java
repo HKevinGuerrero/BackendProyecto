@@ -11,6 +11,20 @@ import lombok.NoArgsConstructor;
 public class Localdto {
 
     /**
+     * @return the imagen
+     */
+    public byte[] getImagen() {
+        return imagen;
+    }
+
+    /**
+     * @param imagen the imagen to set
+     */
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
+    }
+
+    /**
      * @return the idlocal
      */
     public Long getIdlocal() {
@@ -74,6 +88,7 @@ public class Localdto {
     private String direccionRegistro;
 
     private Long telefonoRegistro;
+    private byte[] imagen;
 
 
 }

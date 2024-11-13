@@ -2,12 +2,15 @@ package com.Aplication.controller;
 
 import com.Aplication.Services.LocalService;
 import com.Aplication.modelo.Local;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -66,5 +69,32 @@ public class LocalController {
                     return new ResponseEntity<>(updateLocal, HttpStatus.OK);
                 })
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+    
+    //Cargar imagen
+    @PutMapping("/imagen/{id}")
+    public ResponseEntity<Local> updateClienteImage(
+            @PathVariable Long id,
+            @RequestPart("imagen") MultipartFile imagen) {
+        try {
+            Local local = LocalService.uploadImage(id, imagen);
+            return new ResponseEntity<>(local, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    
+    //Obtiene imagen
+    @GetMapping("/imagen/{id}")
+    public ResponseEntity<byte[]> getClienteImage(@PathVariable Long id) {
+        try {
+            byte[] imagen = LocalService.getImage(id); 
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG) 
+                    .body(imagen);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Si no se encuentra el cliente
+        }
     }
 }
