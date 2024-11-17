@@ -4,6 +4,7 @@ package com.Aplication.Services;
 import com.Aplication.modelo.Turno;
 import com.Aplication.repository.TurnoRepository;
 import jakarta.mail.MessagingException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @Service
@@ -34,8 +36,43 @@ public class TurnoService {
             throw new RuntimeException("Este turno ya está reservado para esta fecha y hora con este barbero en el local especificado.");
         }
 
-        return turnoRepository.save(turno);
+        // Guardar el turno
+        Turno savedTurno = turnoRepository.save(turno);
+
+        // Enviar correo al cliente
+        String subject = "Confirmación de tu reserva en BarberTurn";
+        String htmlContent = "<html lang='es'>"
+                + "<head><meta charset='UTF-8'/><meta name='viewport' content='width=device-width, initial-scale=1.0'/><title>Confirmación de Reserva - BarberTurn</title></head>"
+                + "<body style='font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f6f6f6;'>"
+                + "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='background-color: #f6f6f6; padding: 20px;'>"
+                + "<tr><td align='center'><table cellpadding='0' cellspacing='0' border='0' width='600' style='background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);'>"
+                + "<tr><td style='padding: 40px 0; text-align: center; background-color: #FFD700;'><h1 style='color: #333333; font-size: 28px; margin: 0;'>¡Reserva Confirmada!</h1></td></tr>"
+                + "<tr><td style='padding: 40px 30px;'>"
+                + "<p style='color: #333333; font-size: 16px; line-height: 1.5; margin-bottom: 20px;'>Hola <strong>" + turno.getCliente() + "</strong>,</p>"
+                + "<p style='color: #333333; font-size: 16px; line-height: 1.5; margin-bottom: 20px;'>Tu reserva en BarberTurn ha sido confirmada.</p>"
+                + "<p style='color: #333333; font-size: 16px; line-height: 1.5; margin-bottom: 20px;'>Detalles de tu reserva:</p>"
+                + "<ul style='color: #333333; font-size: 16px; line-height: 1.5; margin-bottom: 20px;'>"
+                + "<li>Fecha: <strong>" + turno.getFecha() + "</strong></li>"
+                + "<li>Hora: <strong>" + turno.getHora() + "</strong></li>"
+                + "<li>Barbería: <strong>" + turno.getLocal() + "</strong></li>"
+                + "<li>Barbero: <strong>" + turno.getBarbero() + "</strong></li>"
+                + "</ul>"
+                + "<p style='color: #333333; font-size: 16px; line-height: 1.5; margin-bottom: 30px;'>¡Gracias por elegir BarberTurn!</p>"
+                + "</td></tr>"
+                + "<tr><td style='background-color: #333333; padding: 30px; text-align: center;'>"
+                + "<p style='color: #ffffff; font-size: 14px; margin: 0;'>El equipo de BarberTurn</p>"
+                + "</td></tr></table></td></tr></table></body></html>";
+
+        try {
+            emailService.sendHtmlEmail(turno.getEmailCliente(), subject, htmlContent);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error al enviar el correo electrónico");
+        }
+
+        return savedTurno;
     }
+
 
     // Obtener todos los turnos
     public List<Turno> getAllTurnos() {
