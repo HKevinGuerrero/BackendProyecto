@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.Aplication.repository.UserClienteRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserClienteService {
@@ -19,6 +20,7 @@ public class UserClienteService {
     private UserBarberoService userBarberoService;
     
     // Método para guardar un cliente
+    @Transactional
     public UserCliente create(UserCliente user) {
         // Verificamos que el usuario no exista en ninguna de las dos tablas
         if (userRepository.findByUsername(user.getUsername()).isPresent() ||
