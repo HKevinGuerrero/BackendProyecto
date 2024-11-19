@@ -14,6 +14,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -28,6 +29,7 @@ public class BarberoService {
     @Autowired
     private EmailService emailService;
 
+    @Transactional
     public Barbero create(Barbero barbero) throws MessagingException {
         // Verificar si ya existe un barbero con el mismo correo o teléfono
         if (barberoRepository.findByEmail(barbero.getEmail()).isPresent() || 
