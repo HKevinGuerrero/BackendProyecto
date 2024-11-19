@@ -17,6 +17,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     public Optional<Cliente> findByEmail(String email);
 
     // Método para buscar un cliente por teléfono
-    public Optional<Cliente> findByTelefono(String telefono);
+    public Optional<Cliente> findByTelefono(Long telefono);
 
 }
