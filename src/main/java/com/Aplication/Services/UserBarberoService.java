@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -25,6 +26,7 @@ public class UserBarberoService {
     private UserClienteService userClienteService;
     
     // Método para guardar un barbero
+    @Transactional
     public UserBarbero create(UserBarbero user) {
         // Verificamos que el usuario no exista en ninguna de las dos tablas
         if (userBarberoRepository.findByUsername(user.getUsername()).isPresent() ||
