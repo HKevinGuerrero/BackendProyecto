@@ -28,9 +28,14 @@ public class BarberoService {
     @Autowired
     private EmailService emailService;
 
-    // Método para guardar un barbero
     public Barbero create(Barbero barbero) throws MessagingException {
-        // Guardamos el barbero en la base de datos y lo devolvemos
+        // Verificar si ya existe un barbero con el mismo correo o teléfono
+        if (barberoRepository.findByEmail(barbero.getEmail()).isPresent() || 
+            barberoRepository.findByTelefono(barbero.getTelefono()).isPresent()) {
+            throw new IllegalArgumentException("El correo electrónico o teléfono ya está registrado");
+        }
+
+    // Guardamos el barbero en la base de datos y lo devolvemos
         Barbero savedBarbero = barberoRepository.save(barbero);
 
         // Creamos el contenido HTML del correo de bienvenida con estilos en línea
