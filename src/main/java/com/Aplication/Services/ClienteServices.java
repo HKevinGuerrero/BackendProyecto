@@ -8,6 +8,7 @@ import jakarta.mail.MessagingException;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,7 @@ public class ClienteServices {
     private EmailService emailService;
 
     // Método para guardar un cliente
+    @Transactional
     public Cliente create(Cliente cliente) throws MessagingException {
     // Verificar si ya existe un cliente con el mismo correo o teléfono
     if (clienteRepository.findByEmail(cliente.getEmail()).isPresent() || 
