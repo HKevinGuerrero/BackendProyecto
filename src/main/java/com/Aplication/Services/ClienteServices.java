@@ -24,8 +24,14 @@ public class ClienteServices {
 
     // Método para guardar un cliente
     public Cliente create(Cliente cliente) throws MessagingException {
-        // Guardamos el cliente en la base de datos y lo devolvemos
-        Cliente savedCliente = clienteRepository.save(cliente);
+    // Verificar si ya existe un cliente con el mismo correo o teléfono
+    if (clienteRepository.findByEmail(cliente.getEmail()).isPresent() || 
+        clienteRepository.findByTelefono(cliente.getTelefono()).isPresent()) {
+        throw new IllegalArgumentException("El correo electrónico o teléfono ya está registrado");
+    }
+
+    // Guardamos el cliente en la base de datos y lo devolvemos
+    Cliente savedCliente = clienteRepository.save(cliente);
 
         String htmlContent
                 = "<html>"
