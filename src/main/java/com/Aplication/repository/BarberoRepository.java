@@ -15,5 +15,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BarberoRepository extends JpaRepository<Barbero, Long> {
 
     public Optional<Barbero> findByNombre(String nombre);
+
+    // Método para buscar un barbero por su correo electrónico
+    public Optional<Barbero> findByEmail(String email);
+    
+    // Método para buscar un barbero por su teléfono
+    public Optional<Barbero> findByTelefono(String telefono);
     
 }
