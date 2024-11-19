@@ -44,7 +44,7 @@ public class BarberoController {
         try {
             // Intenta crear el barbero con la validación de correo y teléfono
             Barbero nuevoBarbero = barberoService.create(barbero);
-            return new ResponseEntity<>(nuevoBarbero.getNombre() + " registrado exitosamente.", HttpStatus.CREATED);
+            return new ResponseEntity<>(nuevoBarbero, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             // Si el correo o teléfono ya existe, devolver un 400 con el mensaje específico
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
