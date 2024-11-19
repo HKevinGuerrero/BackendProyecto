@@ -40,9 +40,18 @@ public class BarberoController {
     private BarberoService barberoService;
 
     @PostMapping("/post")
-    public ResponseEntity<Barbero> createBarbero(@RequestBody Barbero barbero) throws MessagingException {
-        Barbero nuevoBarbero = barberoService.create(barbero);
-        return new ResponseEntity<>(nuevoBarbero, HttpStatus.CREATED);
+    public ResponseEntity<String> createBarbero(@RequestBody Barbero barbero) {
+        try {
+            // Intenta crear el barbero con la validación de correo y teléfono
+            Barbero nuevoBarbero = barberoService.create(barbero);
+            return new ResponseEntity<>(nuevoBarbero.getNombre() + " registrado exitosamente.", HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            // Si el correo o teléfono ya existe, devolver un 400 con el mensaje específico
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            // Para cualquier otro error general
+            return new ResponseEntity<>("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping
