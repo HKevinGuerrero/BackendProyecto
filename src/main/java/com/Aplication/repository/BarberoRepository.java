@@ -20,6 +20,6 @@ public interface BarberoRepository extends JpaRepository<Barbero, Long> {
     public Optional<Barbero> findByEmail(String email);
     
     // Método para buscar un barbero por su teléfono
-    public Optional<Barbero> findByTelefono(String telefono);
+    public Optional<Barbero> findByTelefono(Long telefono);
     
 }
