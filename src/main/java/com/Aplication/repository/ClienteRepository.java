@@ -14,9 +14,9 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     boolean existsByEmail(String email);
 
     // Método para buscar un cliente por correo electrónico
-    Optional<Cliente> findByEmail(String email);
+    public Optional<Cliente> findByEmail(String email);
 
     // Método para buscar un cliente por teléfono
-    Optional<Cliente> findByTelefono(String telefono);
+    public Optional<Cliente> findByTelefono(String telefono);
 
 }
