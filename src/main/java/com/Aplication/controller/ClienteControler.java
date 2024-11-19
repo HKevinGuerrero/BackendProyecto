@@ -25,7 +25,7 @@ public class ClienteControler {
     private ClienteServices clienteServices;
 
     @PostMapping("/post")
-    public ResponseEntity<Barbero> createCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente) {
         try {
             // Intenta crear el barbero con la validación de correo y teléfono
             Cliente nuevoCliente = clienteServices.create(cliente);
